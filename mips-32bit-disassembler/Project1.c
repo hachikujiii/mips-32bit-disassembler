@@ -37,7 +37,6 @@ unsigned int virtual_mem[RAM_SIZE];
 
 //NEC VR4300 , nearly identical to MIPSIII
 
-//need to handle with specific conditions - BCzFL, BCzT, BCzTL, BGEZ, BGEZAL, BGEZALL, BGEZL, BGTZ, BGTZL, BLEZ, BLEZL, BLTZAL, CTC
 
 
 
@@ -519,126 +518,163 @@ int main(void) {
                             break;
                     }
 
-                case 0x02: //J     jump to target 
+                case 0x02: //jump to target 
                     targetaddress = instructions[i] & 0x03FFFFFF;
                     printf("%X  J  %X\n", programcounter, targetaddress);
                     programcounter += 4;
                     break;
 
-                case 0x03: //JAL     jump to target, store return address in r31 
+                case 0x03: //jump to target, store return address in r31 
                     targetaddress = instructions[i] & 0x03FFFFFF;
                     printf("%X  JAL  %X\n", programcounter, targetaddress);
                     programcounter += 4;
                     break; 
 
-                case 0x04: //BEQ    if rs == rt branch to address (delay slot + offset)
+                case 0x04: //if rs == rt branch to address (delay slot + offset)
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
-                    printf("%X  BEQ  %s, %s, %X", programcounter, rs_reg, rt_reg, offset);
+                    printf("%X  BEQ  %s, %s, %X\n", programcounter, rs_reg, rt_reg, offset);
                     programcounter += 4;
                     break;
 
-                case 0x05: //BNE  if rs != rt branch to address delay slot + offset
+                case 0x05: //if rs != rt branch to address delay slot + offset
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
-                    printf("%X  BNE  %s, %s, %X", programcounter, rs_reg, rt_reg, offset);
+                    printf("%X  BNE  %s, %s, %X\n", programcounter, rs_reg, rt_reg, offset);
                     programcounter += 4;
                     break;
 
-                case 0x06: //BLEZ    if rs <= 0 branch to address
+                case 0x06: //if rs <= 0 branch to address
                     char *rs_reg = register_names[rs];
-                    printf("%X  BLEZ  %s, %X", programcounter, rs_reg, offset);
+                    printf("%X  BLEZ  %s, %X\n", programcounter, rs_reg, offset);
                     programcounter += 4;
                     break;
 
-                case 0x07: //BGTZ     if rs > 0 branch to address
+                case 0x07: //if rs > 0 branch to address
                     char *rs_reg = register_names[rs];
-                    printf("%X  BGTZ  %s, %X", programcounter, rs_reg, offset);
+                    printf("%X  BGTZ  %s, %X\n", programcounter, rs_reg, offset);
                     programcounter += 4;
                     break;
 
-                case 0x08: //ADDI    add rs and immediate, store in rt
-                    char *rs_reg = register_names[rs];
-                    char *rt_reg = register_names[rt];
-                    immediate = offset;
-                    printf("%X  ADDI  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
-                    programcounter += 4;
-                    break;
-
-                case 0x09: //ADDIU    add unsigned rs and immediate, store in rt
+                case 0x08: //add rs and immediate, store in rt
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  ADDIU  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  ADDI  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0A: //SLTI    if rs < immediate, store 1 in rd otherwise 0
+                case 0x09: //add unsigned rs and immediate, store in rt
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  SLTI  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  ADDIU  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0B: //SLTIU    if rs < immediate, store 1 in rd otherwise 0
+                case 0x0A: //if rs < immediate, store 1 in rd otherwise 0
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  SLTIU  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  SLTI  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0C: //ANDI    and rs with zero extended immediate, store in rt
+                case 0x0B: //if rs < immediate, store 1 in rd otherwise 0
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  ANDI  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  SLTIU  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0D: //ORI    or rs and zero extended immediate, store in rt
+                case 0x0C: //and rs with zero extended immediate, store in rt
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  ORI  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  ANDI  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0E: //XORI    xor rs and zero extended immediate, store in rt
+                case 0x0D: //or rs and zero extended immediate, store in rt
                     char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  XORI  %s, %s, %X", programcounter, rt_reg, rs_reg, immediate);
+                    printf("%X  ORI  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
                     programcounter += 4;
                     break;
 
-                case 0x0F: //LUI    load upper immediate , imm shifted left 16 bits using trailing 0s
+                case 0x0E: //xor rs and zero extended immediate, store in rt
+                    char *rs_reg = register_names[rs];
                     char *rt_reg = register_names[rt];
                     immediate = offset;
-                    printf("%X  LUI  %s, %X", programcounter, rt_reg, immediate);
+                    printf("%X  XORI  %s, %s, %X\n", programcounter, rt_reg, rs_reg, immediate);
+                    programcounter += 4;
+                    break;
+
+                case 0x0F: //load upper immediate , imm shifted left 16 bits using trailing 0s
+                    char *rt_reg = register_names[rt];
+                    immediate = offset;
+                    printf("%X  LUI  %s, %X\n", programcounter, rt_reg, immediate);
                     programcounter += 4;
                     break;
 
                 case 0x10:
-
+                case 0x11:
+                case 0x12:
+                case 0x13:
                     switch(rs) {
 
-                        case 0x01: //DMFC0   copy doubleword contents of CPz coprocesser rd to GPR rt
+                        case 0x08: // BCzF, BCzT, BCzFL, BCzTL
+
+                            switch(rt) {
+
+                                case 0x00: // BCzF
+                                    printf("%X  BCzF  %X\n", programcounter, offset);
+                                    programcounter += 4;
+                                    break;
+                                case 0x01: // BCzT
+                                    printf("%X  BCzT  %X\n", programcounter, offset);
+                                    programcounter += 4;
+                                    break;
+                                case 0x02: // BCzFL
+                                    printf("%X  BCzFL  %X\n", programcounter, offset);
+                                    programcounter += 4;
+                                    break;
+                                case 0x03: // BCzTL
+                                    printf("%X  BCzTL  %X\n", programcounter, offset);
+                                    programcounter += 4;
+                                    break;
+
+                                default:
+                                    printf("%X  Unknown instruction at BCzf\n", programcounter);
+                                    programcounter += 4;
+                                    break;
+                            }
+                            break;
+
+                        case 0x01: // DMFC0 - Copy doubleword contents of CPz coprocessor rd to GPR rt  
                             char *rd_reg = register_names[rd];
                             char *rt_reg = register_names[rt];
-                            printf("%X  DMFC0  %s, %s", programcounter, rt_reg, rd_reg);
+                            printf("%X  DMFC0  %s, %s\n", programcounter, rt_reg, rd_reg);
                             programcounter += 4;
                             break;
 
-                        case 0x05: //DMTC0   copy doubleword contents of GPR rt to CPz coprocessor rd
+                        case 0x05: // DMTC0 - Copy doubleword contents of GPR rt to CPz coprocessor rd
                             char *rd_reg = register_names[rd];
                             char *rt_reg = register_names[rt];
-                            printf("%X  DMTC0  %s, %s", programcounter, rt_reg, rd_reg);
+                            printf("%X  DMTC0  %s, %s\n", programcounter, rt_reg, rd_reg);
                             programcounter += 4;
                             break;
-                    }   
+                    }
                 
+                case 0x14: //if rs == rt branch to address
+                    char *rs_reg = register_names[rs];
+                    char *rt_reg = register_names[rt];
+                    printf("%X  BEQL  %s, %s, %X\n", programcounter, rs_reg, rt_reg, offset);
+                    programcounter += 4;
+                    break;
+                    
                 case 0x1A: //LDL loads portion of dw at address, stores 1-8 bytes in high order portion of rt
                     char *rt_reg = register_names[rt];
                     char *rs_reg = register_names[rs];
