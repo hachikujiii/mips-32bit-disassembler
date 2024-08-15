@@ -768,27 +768,6 @@ int main(void) {
         }
 }
 
-//r format
-char* find_functname(unsigned int number) { //takes an opcode/function number and returns its name
-
-    for(int i = 0; i < function_count; i++) {
-        
-        if(R_function_codes[i].number == number) {
-            return R_function_codes[i].name;
-        }
-    }
-}
-
-char* find_opname(unsigned int number) { //takes an opcode/function number and returns its name
-
-    for(int i = 0; i < operation_count; i++) {
-        
-        if(I_opcodes[i].number == number) {
-            return I_opcodes[i].name;
-        }
-    }
-}
-
 char* get_register_name(int reg) {
     if (reg >= 0 && reg < 32) {
         return register_names[reg];
